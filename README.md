@@ -1,40 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+-- MOVIE RECOMMENDATION APP (MovieVerse)
+Overview
+This case study involves creating a movie recommendation application where users can browse trending movies and receive recommendations tailored to their preferences. The project showcases dynamic routing, local data storage, and interactive UI design to deliver an engaging user experience.
 
-## Getting Started
+PROJECT GOALS
+The primary objectives of the movie recommendation app are:
 
-First, run the development server:
+- Dynamic Routing
+  Implement dynamic routing using Next.js for detailed movie pages.
+- User Personalization
+  Enable users to save their favorite movies locally or via an API.
+  Interactive Dashboard
+- Build a responsive and visually appealing movie dashboard for browsing and recommendations.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+TECHNOLOGIES USED
+Next.js / React Native: For server-side rendering and dynamic routing.
+TypeScript: To ensure type safety and scalable development.
+Styled Components: For creating reusable, styled UI components.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+KEY FEATURES
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+1. API Integration
+   Fetch and display trending and recommended movies using a public movie API.
+   Implement proper error handling and loading states during API calls.
+2. Dynamic Routing
+   Create detailed pages for individual movies using Next.js dynamic routing.
+   Ensure fast navigation and optimized rendering of movie details.
+3. Save Favorite Movies
+   Allow users to save their favorite movies locally using local storage or via an API backend.
+   Implement a favorites section on the dashboard to manage and view saved movies.
+4. Responsive and Interactive UI
+   Design a movie dashboard featuring trending and recommended movies.
+   Use media queries to ensure the app is fully responsive across devices.
+   Provide smooth interactions, including hover effects and animations for movie cards.
