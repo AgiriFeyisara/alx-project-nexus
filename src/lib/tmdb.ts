@@ -27,4 +27,35 @@ export const fetchMovieDetails = async (id: string) => {
   if (!res.ok) throw new Error("Failed to fetch movie details");
   return res.json();
 };
+export const searchMovies = async (query: string, page: number = 1) => {
+  if (!query) return { results: [] };
+  const res = await fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}`);
+  const data = await res.json();
+  return data;
+};
+
+export const fetchMoviesByFilters = async ({
+  genre,
+  year,
+  country,
+  page = 1,
+}: {
+  genre?: string;
+  year?: string;
+  country?: string;
+  page?: number;
+}) => {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/discover/movie?api_key=${
+      process.env.NEXT_PUBLIC_TMDB_API_KEY
+    }&sort_by=popularity.desc&page=${page}
+     ${genre ? `&with_genres=${genre}` : ""}
+     ${year ? `&primary_release_year=${year}` : ""}
+     ${country ? `&region=${country}` : ""}`
+  );
+
+  return res.json();
+};
+
+
 

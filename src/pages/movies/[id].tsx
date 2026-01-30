@@ -10,6 +10,40 @@ const MovieDetailsPage = () => {
   const [movie, setMovie] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [trailerKey, setTrailerKey] = useState<string | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+useEffect(() => {
+  if (!movie) return;
+  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+  setIsFavorite(favorites.includes(movie.id));
+}, [movie]);
+
+
+useEffect(() => {
+  if (!id) return;
+
+  const loadMovie = async () => {
+    try {
+      const data = await fetchMovieDetails(id as string);
+      setMovie(data);
+
+      // Grab the first trailer from the videos array
+      const trailer = data.videos?.results.find(
+        (v: any) => v.type === "Trailer" && v.site === "YouTube"
+      );
+      if (trailer) setTrailerKey(trailer.key);
+
+    } catch {
+      setError("Unable to load movie details");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadMovie();
+}, [id]);
+
 
   useEffect(() => {
     if (!id) return;
@@ -33,6 +67,22 @@ const MovieDetailsPage = () => {
   if (error)
     return <p className="p-6 text-red-500 text-center">{error}</p>;
   if (!movie) return null;
+
+  const toggleFavorite = () => {
+  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+  if (isFavorite) {
+    // Remove from favorites
+    const updated = favorites.filter((id: number) => id !== movie.id);
+    localStorage.setItem("favorites", JSON.stringify(updated));
+    setIsFavorite(false);
+  } else {
+    // Add to favorites
+    favorites.push(movie.id);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+    setIsFavorite(true);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -69,12 +119,28 @@ const MovieDetailsPage = () => {
 
           {/* Buttons */}
           <div className="flex gap-4 mt-2">
-            <button className="flex-1 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition">
-              Watch Trailer
-            </button>
-            <button className="flex-1 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg font-semibold transition">
-              Add to Favorites
-            </button>
+            <button
+  className="flex-1 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition"
+  onClick={() => {
+    if (trailerKey) {
+      window.open(`https://www.youtube.com/watch?v=${trailerKey}`, "_blank");
+    } else {
+      alert("Trailer not available");
+    }
+  }}
+>
+  Watch Trailer
+</button>
+
+            <button
+  className={`flex-1 py-3 rounded-lg font-semibold transition ${
+    isFavorite ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-800 hover:bg-gray-700"
+  }`}
+  onClick={toggleFavorite}
+>
+  {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+</button>
+
           </div>
         </div>
 
