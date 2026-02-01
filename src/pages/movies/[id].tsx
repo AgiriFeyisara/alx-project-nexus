@@ -13,37 +13,34 @@ const MovieDetailsPage = () => {
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
-useEffect(() => {
-  if (!movie) return;
-  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-  setIsFavorite(favorites.includes(movie.id));
-}, [movie]);
+  useEffect(() => {
+    if (!movie) return;
+    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+    setIsFavorite(favorites.includes(movie.id));
+  }, [movie]);
 
+  useEffect(() => {
+    if (!id) return;
 
-useEffect(() => {
-  if (!id) return;
+    const loadMovie = async () => {
+      try {
+        const data = await fetchMovieDetails(id as string);
+        setMovie(data);
 
-  const loadMovie = async () => {
-    try {
-      const data = await fetchMovieDetails(id as string);
-      setMovie(data);
+        // Grab the first trailer from the videos array
+        const trailer = data.videos?.results.find(
+          (v: any) => v.type === "Trailer" && v.site === "YouTube",
+        );
+        if (trailer) setTrailerKey(trailer.key);
+      } catch {
+        setError("Unable to load movie details");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      // Grab the first trailer from the videos array
-      const trailer = data.videos?.results.find(
-        (v: any) => v.type === "Trailer" && v.site === "YouTube"
-      );
-      if (trailer) setTrailerKey(trailer.key);
-
-    } catch {
-      setError("Unable to load movie details");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  loadMovie();
-}, [id]);
-
+    loadMovie();
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -64,25 +61,24 @@ useEffect(() => {
 
   if (loading)
     return <p className="p-6 text-gray-400 text-center">Loading movie...</p>;
-  if (error)
-    return <p className="p-6 text-red-500 text-center">{error}</p>;
+  if (error) return <p className="p-6 text-red-500 text-center">{error}</p>;
   if (!movie) return null;
 
   const toggleFavorite = () => {
-  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
 
-  if (isFavorite) {
-    // Remove from favorites
-    const updated = favorites.filter((id: number) => id !== movie.id);
-    localStorage.setItem("favorites", JSON.stringify(updated));
-    setIsFavorite(false);
-  } else {
-    // Add to favorites
-    favorites.push(movie.id);
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-    setIsFavorite(true);
-  }
-};
+    if (isFavorite) {
+      // Remove from favorites
+      const updated = favorites.filter((id: number) => id !== movie.id);
+      localStorage.setItem("favorites", JSON.stringify(updated));
+      setIsFavorite(false);
+    } else {
+      // Add to favorites
+      favorites.push(movie.id);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      setIsFavorite(true);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -100,9 +96,7 @@ useEffect(() => {
         <div className="w-6" />
       </div>
 
-      {/* Main Content */}
       <div className="max-w-6xl mx-auto px-5 py-8 flex flex-col md:flex-row gap-8">
-        {/* Poster + Buttons */}
         <div className="flex flex-col w-full md:w-1/3 gap-4">
           <div className="relative w-full h-[500px] md:h-[600px] rounded-lg overflow-hidden shadow-lg">
             <Image
@@ -120,27 +114,31 @@ useEffect(() => {
           {/* Buttons */}
           <div className="flex gap-4 mt-2">
             <button
-  className="flex-1 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition"
-  onClick={() => {
-    if (trailerKey) {
-      window.open(`https://www.youtube.com/watch?v=${trailerKey}`, "_blank");
-    } else {
-      alert("Trailer not available");
-    }
-  }}
->
-  Watch Trailer
-</button>
-
+              className="flex-1 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition"
+              onClick={() => {
+                if (trailerKey) {
+                  window.open(
+                    `https://www.youtube.com/watch?v=${trailerKey}`,
+                    "_blank",
+                  );
+                } else {
+                  alert("Trailer not available");
+                }
+              }}
+            >
+              Watch Trailer
+            </button>
+            {/* This is the favorite button icon */}
             <button
-  className={`flex-1 py-3 rounded-lg font-semibold transition ${
-    isFavorite ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-800 hover:bg-gray-700"
-  }`}
-  onClick={toggleFavorite}
->
-  {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-</button>
-
+              className={`flex-1 py-3 rounded-lg font-semibold transition ${
+                isFavorite
+                  ? "bg-gray-700 hover:bg-gray-600"
+                  : "bg-gray-800 hover:bg-gray-700"
+              }`}
+              onClick={toggleFavorite}
+            >
+              {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+            </button>
           </div>
         </div>
 
@@ -149,7 +147,7 @@ useEffect(() => {
           {/* Title & Meta */}
           <h1 className="text-3xl font-bold">{movie.title}</h1>
           <p className="text-gray-400">
-            {movie.release_date?.split("-")[0]} • {movie.runtime} mins • ⭐{" "}
+            {movie.release_date?.split("-")[0]} • {movie.runtime} mins •{" "}
             {movie.vote_average}/10
           </p>
 
@@ -168,7 +166,9 @@ useEffect(() => {
           {/* Synopsis */}
           <div className="mt-4">
             <h2 className="text-xl font-semibold">Synopsis</h2>
-            <p className="text-gray-300 leading-relaxed mt-2">{movie.overview}</p>
+            <p className="text-gray-300 leading-relaxed mt-2">
+              {movie.overview}
+            </p>
           </div>
 
           {/* Cast */}
@@ -193,7 +193,9 @@ useEffect(() => {
                       </div>
                     )}
                     <p className="text-sm mt-1 truncate">{cast.name}</p>
-                    <p className="text-xs text-gray-400 truncate">{cast.character}</p>
+                    <p className="text-xs text-gray-400 truncate">
+                      {cast.character}
+                    </p>
                   </div>
                 ))}
               </div>

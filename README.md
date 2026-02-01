@@ -1,10 +1,9 @@
-<!-- Update the search bar in the home screen to render series also -->
 <!-- Add tmdb logo at the down of the page -->
-<!-- Logo reflect white when on gray screen -->
+
 <!-- Add favorites page -->
-<!-- when on small screen hamburger menu -->
+
 <!-- Manage state with Redux -->
-<!-- Form handling with formik -->
+
 <!-- Added filter on both movie and series page -->
 
 -- MOVIE RECOMMENDATION APP (MovieVerse)
